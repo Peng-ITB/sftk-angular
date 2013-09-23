@@ -1,5 +1,6 @@
 'use strict';
-//, 'AngularForce', 'AngularForceObjectFactory'
+
+//Route definitions
 var app = angular.module('isamAngularApp', ['isamAngularApp.controllers']).
   config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
@@ -19,12 +20,7 @@ var app = angular.module('isamAngularApp', ['isamAngularApp.controllers']).
 
   }]);
 
-/**
- * Describe Salesforce object to be used in the app. For example: Below AngularJS factory shows how to describe and
- * create an 'Contact' object. And then set its type, fields, where-clause etc.
- *
- *  PS: This module is injected into ListCtrl, EditCtrl etc. controllers to further consume the object.
- */
+//Salesforce object definitions via AngularForce
 angular.module('Contact', []).factory('Contact', function (AngularForceObjectFactory) {
     var Contact = new AngularForceObjectFactory({type: 'Contact', fields: ['FirstName', 'LastName', 'Title', 'Phone', 'Email', 'Id'], where: '', limit: 20});
     return Contact;
@@ -35,6 +31,7 @@ angular.module('Account', []).factory('Account', function (AngularForceObjectFac
     return Account;
 });
 
+//Init app for Salesforce Authentication
 function initApp(options, forcetkClient) {
     options = options || {};
     options.loginUrl = SFConfig.sfLoginURL;
@@ -52,26 +49,7 @@ function initApp(options, forcetkClient) {
     Force.init(options, options.apiVersion, forcetkClient);
 }
 
-/**
- * Please configure Salesforce consumerkey, proxyUrl etc in getSFConfig().
- *
- * SFConfig is a central configuration JS Object. It is used by angular-force.js and also your app to set and retrieve
- * various configuration or authentication related information.
- *
- * Note: Please configure SFConfig Salesforce consumerkey, proxyUrl etc in getSFConfig() below.
- *
- * @property SFConfig Salesforce Config object with the following properties.
- * @attribute {String} sfLoginURL       Salesforce login url
- * @attribute {String} consumerKey      Salesforce app's consumer key
- * @attribute {String} oAuthCallbackURL OAuth Callback URL. Note: If you are running on Heroku or elsewhere you need to set this.
- * @attribute {String} proxyUrl         URL to proxy cross-domain calls. Note: This nodejs app acts as a proxy server as well at <location>/proxy/
- * @attribute {String} client           ForcetkClient. Set by forcetk lib
- * @attribute {String} sessionId        Session Id. Set by forcetk lib
- * @attribute {String} apiVersion       REST Api version. Set by forcetk (Set this manually for visualforce)
- * @attribute {String} instanceUrl      Your Org. specific url. Set by forcetk.
- *
- * @returns SFConfig object depending on where (localhost v/s heroku v/s visualforce) the app is running.
- */
+//Generate config object to be used by ForceTK
 function getSFConfig() {
     var location = document.location;
     var href = location.href;
@@ -95,7 +73,7 @@ function getSFConfig() {
 }
 
 
-//Helper
+//Helper to properly formate URL's 
 function removeTrailingSlash(url) {
     return url.replace(/\/$/, '');
 }

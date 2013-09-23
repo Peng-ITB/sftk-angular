@@ -1,6 +1,7 @@
 'use strict';
 
 angular.module('isamAngularApp.controllers', ['AngularForce', 'AngularForceObjectFactory', 'Contact', 'Account'])
+//Home page - check for authentication or push to Contact list page
 .controller('HomeCtrl', function ($scope, AngularForce, $location, $route) {
     var isOnline;
     if(AngularForce.isOnline) {
@@ -39,7 +40,7 @@ angular.module('isamAngularApp.controllers', ['AngularForce', 'AngularForceObjec
         $location.path('/login');
     }
 })
-
+// if Authenticated, go to Contact list
 .controller('LoginCtrl', function ($scope, AngularForce, $location) {
     //Usually happens in Cordova
     if (AngularForce.authenticated()) {
@@ -57,8 +58,6 @@ angular.module('isamAngularApp.controllers', ['AngularForce', 'AngularForceObjec
         }
     };
 
-
-
     $scope.isLoggedIn = function () {
         return AngularForce.authenticated();
     };
@@ -71,7 +70,7 @@ angular.module('isamAngularApp.controllers', ['AngularForce', 'AngularForceObjec
         });
     };
 })
-
+//Handle oAuth callback from Salesforce
 .controller('CallbackCtrl', function ($scope, AngularForce, $location) {
     AngularForce.oauthCallback(document.location.href);
 
@@ -81,7 +80,7 @@ angular.module('isamAngularApp.controllers', ['AngularForce', 'AngularForceObjec
     $location.hash('');
     $location.path('/contacts');
 })
-
+//Contact list controller
 .controller('ContactListCtrl', function ($scope, AngularForce, $location, Contact) {
     if (!AngularForce.authenticated()) {
         return $location.path('/home');
@@ -118,6 +117,7 @@ angular.module('isamAngularApp.controllers', ['AngularForce', 'AngularForceObjec
         $location.path('/new/contact');
     };
 }).
+//Create a new Contact
 controller('ContactCreateCtrl', function ($scope, $location, Contact) {
     $scope.save = function () {
         Contact.save($scope.contact, function (contact) {
@@ -128,8 +128,8 @@ controller('ContactCreateCtrl', function ($scope, $location, Contact) {
         });
     };
 }).
+//View a Contact
 controller('ContactViewCtrl', function ($scope, AngularForce, $location, $routeParams, Contact) {
-
     AngularForce.login(function () {
         Contact.get({id: $routeParams.contactId}, function (contact) {
             self.original = contact;
@@ -137,8 +137,8 @@ controller('ContactViewCtrl', function ($scope, AngularForce, $location, $routeP
             $scope.$apply();//Required coz sfdc uses jquery.ajax
         });
     });
-
 }).
+//Edit a contact
 controller('ContactDetailCtrl', function ($scope, AngularForce, $location, $routeParams, Contact) {
     var self = this;
 
@@ -199,6 +199,7 @@ controller('ContactDetailCtrl', function ($scope, AngularForce, $location, $rout
         }
     };
 })
+//View list of Accounts
 .controller('AccountListCtrl', function ($scope, AngularForce, $location, Account) {
     if (!AngularForce.authenticated()) {
         return $location.path('/home');
@@ -235,6 +236,7 @@ controller('ContactDetailCtrl', function ($scope, AngularForce, $location, $rout
         $location.path('/new/account');
     };
 }).
+//Create and Account
 controller('AccountCreateCtrl', function ($scope, $location, Account) {
     $scope.save = function () {
         Account.save($scope.account, function (account) {
@@ -245,8 +247,8 @@ controller('AccountCreateCtrl', function ($scope, $location, Account) {
         });
     };
 }).
+//View an Account
 controller('AccountViewCtrl', function ($scope, AngularForce, $location, $routeParams, Account) {
-
     AngularForce.login(function () {
         Account.get({id: $routeParams.accountId}, function (account) {
             self.original = account;
@@ -256,6 +258,7 @@ controller('AccountViewCtrl', function ($scope, AngularForce, $location, $routeP
     });
 
 }).
+//Edit an Account
 controller('AccountDetailCtrl', function ($scope, AngularForce, $location, $routeParams, Account) {
     var self = this;
 
