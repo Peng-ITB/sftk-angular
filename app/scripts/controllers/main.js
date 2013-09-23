@@ -1,9 +1,20 @@
 'use strict';
 
-angular.module('sftkAngularApp', [])
+angular.module('isamAngularApp.controllers', ['AngularForce', 'AngularForceObjectFactory', 'Contact', 'Account'])
 .controller('HomeCtrl', function ($scope, AngularForce, $location, $route) {
-    var isOnline =  AngularForce.isOnline();
-    var isAuthenticated = AngularForce.authenticated();
+    var isOnline;
+    if(AngularForce.isOnline) {
+        isOnline = AngularForce.isOnline()
+    } else {
+        isOnline = false;
+    }
+    
+    var isAuthenticated;
+    if(AngularForce.authenticated) {
+        isAuthenticated = AngularForce.authenticated();
+    } else {
+        isAuthenticated = false;
+    }
 
     //Offline support (only for Cordova)
     //First check if we are online, then check if we are already authenticated (usually happens in Cordova),
@@ -187,4 +198,122 @@ controller('ContactDetailCtrl', function ($scope, AngularForce, $location, $rout
             $location.path('/contacts');
         }
     };
+})
+.controller('AccountListCtrl', function ($scope, AngularForce, $location, Account) {
+    if (!AngularForce.authenticated()) {
+        return $location.path('/home');
+    }
+
+    $scope.searchTerm = '';
+    $scope.working = false;
+
+    Account.query(function (data) {
+        $scope.accounts = data.records;
+        $scope.$apply();//Required coz sfdc uses jquery.ajax
+    }, function (data) {
+        alert('Query Error');
+    });
+
+    $scope.isWorking = function () {
+        return $scope.working;
+    };
+
+    $scope.doSearch = function () {
+        Account.search($scope.searchTerm, function (data) {
+            $scope.accounts = data;
+            $scope.$apply();//Required coz sfdc uses jquery.ajax
+        }, function (data) {
+        });
+    };
+
+    $scope.doView = function (accountId) {
+        console.log('doView');
+        $location.path('/view/' + accountId);
+    };
+
+    $scope.doCreate = function () {
+        $location.path('/new');
+    };
+}).
+controller('AccountCreateCtrl', function ($scope, $location, Account) {
+    $scope.save = function () {
+        Account.save($scope.account, function (account) {
+            var c = account;
+            $scope.$apply(function () {
+                $location.path('/view/' + c.Id);
+            });
+        });
+    };
+}).
+controller('AccountViewCtrl', function ($scope, AngularForce, $location, $routeParams, Account) {
+
+    AngularForce.login(function () {
+        Account.get({id: $routeParams.accountId}, function (account) {
+            self.original = account;
+            $scope.account = new Account(self.original);
+            $scope.$apply();//Required coz sfdc uses jquery.ajax
+        });
+    });
+
+}).
+controller('AccountDetailCtrl', function ($scope, AngularForce, $location, $routeParams, Account) {
+    var self = this;
+
+    if ($routeParams.accountId) {
+        AngularForce.login(function () {
+            Account.get({id: $routeParams.accountId},
+                function (contact) {
+                    self.original = account;
+                    $scope.account = new Account(self.original);
+                    $scope.$apply();//Required coz sfdc uses jquery.ajax
+                });
+        });
+    } else {
+        $scope.account = new Account();
+        //$scope.$apply();
+    }
+
+    $scope.isClean = function () {
+        return angular.equals(self.original, $scope.account);
+    };
+
+    $scope.destroy = function () {
+        self.original.destroy(
+            function () {
+                $scope.$apply(function () {
+                    $location.path('/accounts');
+                });
+            },
+            function (errors) {
+                alert('Could not delete account!\n' + JSON.parse(errors.responseText)[0].message);
+            }
+        );
+    };
+
+    $scope.save = function () {
+        if ($scope.account.Id) {
+            $scope.account.update(function () {
+                $scope.$apply(function () {
+                    $location.path('/view/' + $scope.account.Id);
+                });
+
+            });
+        } else {
+            Account.save($scope.account, function (account) {
+                var c = account;
+                $scope.$apply(function () {
+                    $location.path('/view/' + c.Id || c.id);
+                });
+            });
+        }
+    };
+
+    $scope.doCancel = function () {
+        if ($scope.account.Id) {
+            $location.path('/view/' + $scope.account.Id);
+        } else {
+            $location.path('/accounts');
+        }
+    };
 });
+;
