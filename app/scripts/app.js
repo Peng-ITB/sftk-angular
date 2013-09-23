@@ -8,13 +8,13 @@ var app = angular.module('isamAngularApp', ['isamAngularApp.controllers']).
       when('/logout', {controller: 'LoginCtrl', templateUrl: '../views/logout.html'}).
       when('/callback', {controller: 'CallbackCtrl', templateUrl: '../views/callback.html'}).
       when('/contacts', {controller: 'ContactListCtrl', templateUrl: '../views/contact/list.html'}).
-      when('/view/:contactId', {controller: 'ContactViewCtrl', templateUrl: '../views/contact/view.html'}).
-      when('/edit/:contactId', {controller: 'ContactDetailCtrl', templateUrl: '../views/contact/edit.html'}).
-      when('/new', {controller: 'ContactDetailCtrl', templateUrl: '../views/contact/edit.html'}).
+      when('/view/contact/:contactId', {controller: 'ContactViewCtrl', templateUrl: '../views/contact/view.html'}).
+      when('/edit/contact/:contactId', {controller: 'ContactDetailCtrl', templateUrl: '../views/contact/edit.html'}).
+      when('/new/contact', {controller: 'ContactDetailCtrl', templateUrl: '../views/contact/edit.html'}).
       when('/accounts', {controller: 'AccountListCtrl', templateUrl: '../views/account/list.html'}).
-      when('/view/:accountId', {controller: 'AccountViewCtrl', templateUrl: '../views/account/view.html'}).
-      when('/edit/:accountId', {controller: 'AccountDetailCtrl', templateUrl: '../views/account/edit.html'}).
-      when('/new', {controller: 'AccountDetailCtrl', templateUrl: '../views/account/edit.html'}).
+      when('/view/account/:accountId', {controller: 'AccountViewCtrl', templateUrl: '../views/account/view.html'}).
+      when('/edit/account/:accountId', {controller: 'AccountDetailCtrl', templateUrl: '../views/account/edit.html'}).
+      when('/new/account', {controller: 'AccountDetailCtrl', templateUrl: '../views/account/edit.html'}).
       otherwise({redirectTo: '/'});
 
   }]);

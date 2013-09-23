@@ -8,7 +8,7 @@ angular.module('isamAngularApp.controllers', ['AngularForce', 'AngularForceObjec
     } else {
         isOnline = false;
     }
-    
+
     var isAuthenticated;
     if(AngularForce.authenticated) {
         isAuthenticated = AngularForce.authenticated();
@@ -111,11 +111,11 @@ angular.module('isamAngularApp.controllers', ['AngularForce', 'AngularForceObjec
 
     $scope.doView = function (contactId) {
         console.log('doView');
-        $location.path('/view/' + contactId);
+        $location.path('/view/contact/' + contactId);
     };
 
     $scope.doCreate = function () {
-        $location.path('/new');
+        $location.path('/new/contact');
     };
 }).
 controller('ContactCreateCtrl', function ($scope, $location, Contact) {
@@ -123,7 +123,7 @@ controller('ContactCreateCtrl', function ($scope, $location, Contact) {
         Contact.save($scope.contact, function (contact) {
             var c = contact;
             $scope.$apply(function () {
-                $location.path('/view/' + c.Id);
+                $location.path('/view/contact/' + c.Id);
             });
         });
     };
@@ -177,7 +177,7 @@ controller('ContactDetailCtrl', function ($scope, AngularForce, $location, $rout
         if ($scope.contact.Id) {
             $scope.contact.update(function () {
                 $scope.$apply(function () {
-                    $location.path('/view/' + $scope.contact.Id);
+                    $location.path('/view/contact/' + $scope.contact.Id);
                 });
 
             });
@@ -185,7 +185,7 @@ controller('ContactDetailCtrl', function ($scope, AngularForce, $location, $rout
             Contact.save($scope.contact, function (contact) {
                 var c = contact;
                 $scope.$apply(function () {
-                    $location.path('/view/' + c.Id || c.id);
+                    $location.path('/view/contact' + c.Id || c.id);
                 });
             });
         }
@@ -193,7 +193,7 @@ controller('ContactDetailCtrl', function ($scope, AngularForce, $location, $rout
 
     $scope.doCancel = function () {
         if ($scope.contact.Id) {
-            $location.path('/view/' + $scope.contact.Id);
+            $location.path('/view/contact' + $scope.contact.Id);
         } else {
             $location.path('/contacts');
         }
@@ -228,11 +228,11 @@ controller('ContactDetailCtrl', function ($scope, AngularForce, $location, $rout
 
     $scope.doView = function (accountId) {
         console.log('doView');
-        $location.path('/view/' + accountId);
+        $location.path('/view/account' + accountId);
     };
 
     $scope.doCreate = function () {
-        $location.path('/new');
+        $location.path('/new/account');
     };
 }).
 controller('AccountCreateCtrl', function ($scope, $location, Account) {
@@ -240,7 +240,7 @@ controller('AccountCreateCtrl', function ($scope, $location, Account) {
         Account.save($scope.account, function (account) {
             var c = account;
             $scope.$apply(function () {
-                $location.path('/view/' + c.Id);
+                $location.path('/view/account/' + c.Id);
             });
         });
     };
@@ -262,7 +262,7 @@ controller('AccountDetailCtrl', function ($scope, AngularForce, $location, $rout
     if ($routeParams.accountId) {
         AngularForce.login(function () {
             Account.get({id: $routeParams.accountId},
-                function (contact) {
+                function (account) {
                     self.original = account;
                     $scope.account = new Account(self.original);
                     $scope.$apply();//Required coz sfdc uses jquery.ajax
@@ -294,7 +294,7 @@ controller('AccountDetailCtrl', function ($scope, AngularForce, $location, $rout
         if ($scope.account.Id) {
             $scope.account.update(function () {
                 $scope.$apply(function () {
-                    $location.path('/view/' + $scope.account.Id);
+                    $location.path('/view/account' + $scope.account.Id);
                 });
 
             });
@@ -302,7 +302,7 @@ controller('AccountDetailCtrl', function ($scope, AngularForce, $location, $rout
             Account.save($scope.account, function (account) {
                 var c = account;
                 $scope.$apply(function () {
-                    $location.path('/view/' + c.Id || c.id);
+                    $location.path('/view/account' + c.Id || c.id);
                 });
             });
         }
@@ -310,7 +310,7 @@ controller('AccountDetailCtrl', function ($scope, AngularForce, $location, $rout
 
     $scope.doCancel = function () {
         if ($scope.account.Id) {
-            $location.path('/view/' + $scope.account.Id);
+            $location.path('/view/account' + $scope.account.Id);
         } else {
             $location.path('/accounts');
         }
