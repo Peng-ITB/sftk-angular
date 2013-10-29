@@ -1,8 +1,17 @@
 'use strict';
 
 angular.module('isamAngularApp.controllers', ['AngularForce', 'AngularForceObjectFactory', 'Contact', 'Account'])
+// if Authenticated, go to Contact list
+.controller('NavCtrl', function ($scope, $location, $route) {
+    $scope.activePath = null;
+    $scope.$on('$routeChangeSuccess', function(){
+        $scope.activePath = $location.path();
+        console.log( $location.path() );
+    });
+})
 //Home page - check for authentication or push to Contact list page
 .controller('HomeCtrl', function ($scope, AngularForce, $location, $route) {
+    
     var isOnline;
     if(AngularForce.isOnline) {
         isOnline = AngularForce.isOnline()
@@ -44,7 +53,8 @@ angular.module('isamAngularApp.controllers', ['AngularForce', 'AngularForceObjec
 .controller('LoginCtrl', function ($scope, AngularForce, $location) {
     //Usually happens in Cordova
     if (AngularForce.authenticated()) {
-        return $location.path('/contacts/');
+        //return $location.path('/contacts/');
+        return $location.path('/main');
     }
 
     $scope.login = function () {
@@ -78,7 +88,8 @@ angular.module('isamAngularApp.controllers', ['AngularForce', 'AngularForceObjec
     //..coz oauth CB returns access_token in its own hash making it two hashes (1 from angular,
     // and another from oauth)
     $location.hash('');
-    $location.path('/contacts');
+    //$location.path('/contacts');
+    $location.path('/main');
 })
 //Contact list controller
 .controller('ContactListCtrl', function ($scope, AngularForce, $location, Contact) {
