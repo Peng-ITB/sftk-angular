@@ -4,25 +4,25 @@
         <div class="control-group" ng-class="{error: myForm.Name.$invalid}">
             <div class="form-group" id="FirstNameGroup">
                 <label class="control-label" for="FirstName">First Name</label>
-                <input type="text" id="FirstName" class="form-control" ng-model="contact.FirstName"/>
+                <input type="text" id="FirstName" class="form-control input-large" ng-model="contact.FirstName"/>
             </div>
             <div class="form-group" id="LastNameGroup">
                 <label class="control-label" for="LastName">Last Name</label>
-                <input type="text" id="LastName" class="form-control" ng-model="contact.LastName" required/>
+                <input type="text" id="LastName" class="form-control input-large" ng-model="contact.LastName" required/>
                 <span ng-show="myForm.LastName.$error.required" class="help-inline">
                 Required</span>
             </div>
             <div class="form-group" id="TitleGroup">
                 <label class="control-label" for="Title">Title</label>
-                <input type="text" id="Title" class="form-control" ng-model="contact.Title"/>
+                <input type="text" id="Title" class="form-control input-large" ng-model="contact.Title"/>
             </div>
             <div class="form-group" id="EmailGroup">
                 <label class="control-label" for="Email">Email</label>
-                <input type="text" id="Email" class="form-control" ng-model="contact.Email"/>
+                <input type="text" id="Email" class="form-control input-large" ng-model="contact.Email"/>
             </div>
             <div class="form-group" id="PhoneGroup">
                 <label class="control-label" for="Phone">Phone</label>
-                <input type="text" id="Phone" class="form-control" ng-model="contact.Phone"/>
+                <input type="text" id="Phone" class="form-control input-large" ng-model="contact.Phone"/>
             </div>
             <input disabled="disabled" type="hidden" id="Id" ng-model="contact.Id">
         </div>
