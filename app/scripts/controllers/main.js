@@ -159,7 +159,7 @@ controller('ContactViewCtrl', function ($scope, AngularForce, $location, $routeP
     });
 }).
 //Edit a contact
-controller('ContactDetailCtrl', function ($scope, AngularForce, $location, $routeParams, Contact) {
+controller('ContactDetailCtrl', function ($scope, AngularForce, $location, $routeParams, Contact, validationService) {
     var self = this;
 
     if ($routeParams.contactId) {
@@ -194,9 +194,7 @@ controller('ContactDetailCtrl', function ($scope, AngularForce, $location, $rout
     };
 
     $scope.save = function () {
-        $('#errorMessageDiv').empty();
-        $('.removeError').remove();
-        $('.has-error').removeClass('has-error');
+        validationService.clearValidationErrors();
         if ($scope.contact.Id) {
             $scope.contact.update(function () {
                 $scope.$apply(function () {
@@ -204,13 +202,7 @@ controller('ContactDetailCtrl', function ($scope, AngularForce, $location, $rout
                 });
 
             }, function(error){
-                errorObject = $.parseJSON(error.responseText);
-                $.each(errorObject, function(index, error){
-                    $.each(error.fields, function(index, field){
-                        $('#'+field+'Group').addClass('has-error');
-                        $('#'+field).parent().after('<div class="text-danger removeError">'+error.message+'</div>');
-                    });
-                });
+                validationService.processValidationErrors(error);
             });
         } else {
             Contact.save($scope.contact, function (contact) {
@@ -219,13 +211,7 @@ controller('ContactDetailCtrl', function ($scope, AngularForce, $location, $rout
                     $location.path('/view/contact' + c.Id || c.id);
                 });
             }, function(error){
-                errorObject = $.parseJSON(error.responseText);
-                $.each(errorObject, function(index, error){
-                    $.each(error.fields, function(index, field){
-                        $('#'+field+'Group').addClass('has-error');
-                        $('#'+field).parent().after('<div class="text-danger removeError">'+error.message+'</div>');
-                    });
-                });
+                validationService.processValidationErrors(error);
             });
         }
     };
