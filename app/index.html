@@ -45,7 +45,8 @@
           <li ng-class="{ active: activePath=='/contacts' }"><a href="#/contacts">Contacts</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="#" ng-click="login()">Login</a></li>
+          <li ng-hide="isAuthenticated"><a href="#" ng-click="login()">Login</a></li>
+          <li ng-hide="!isAuthenticated"><a href="#" ng-click="logout()">Logout</a></li>
         </ul>
       </div>
     </nav>

@@ -2,12 +2,19 @@
 
 angular.module('AngularApp.controllers', ['AngularForce', 'AngularForceObjectFactory', 'Contact', 'Account'])
 // if Authenticated, go to Contact list
-.controller('NavCtrl', function ($scope, $location, $route) {
+.controller('NavCtrl', function ($scope, AngularForce, $location, $route) {
     $scope.activePath = null;
     $scope.$on('$routeChangeSuccess', function(){
         $scope.activePath = $location.path();
         console.log( $location.path() );
     });
+    $scope.isAuthenticated = AngularForce.authenticated();
+    $scope.login = function(){
+        $location.path('/login');
+    };
+    $scope.logout = function(){
+        $location.path('/logout');
+    };
 })
 //Home page - check for authentication or push to Contact list page
 .controller('HomeCtrl', function ($scope, AngularForce, $location, $route) {
