@@ -1,7 +1,7 @@
 'use strict';
-
+var errorObject;
 //Route definitions
-var app = angular.module('isamAngularApp', ['isamAngularApp.controllers']).
+var app = angular.module('AngularApp', ['AngularApp.controllers']).
   config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
       when('/', {controller: 'HomeCtrl', templateUrl: '../views/home.html'}).

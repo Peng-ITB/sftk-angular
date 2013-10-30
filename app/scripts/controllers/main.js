@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('isamAngularApp.controllers', ['AngularForce', 'AngularForceObjectFactory', 'Contact', 'Account'])
+angular.module('AngularApp.controllers', ['AngularForce', 'AngularForceObjectFactory', 'Contact', 'Account'])
 // if Authenticated, go to Contact list
 .controller('NavCtrl', function ($scope, $location, $route) {
     $scope.activePath = null;
@@ -33,6 +33,7 @@ angular.module('isamAngularApp.controllers', ['AngularForce', 'AngularForceObjec
         if(!isAuthenticated) {//MobileWeb
             return $location.path('/login');
         } else {//Cordova
+            //return $location.path('/contacts/');
             return $location.path('/contacts/');
         }
     }
@@ -54,14 +55,15 @@ angular.module('isamAngularApp.controllers', ['AngularForce', 'AngularForceObjec
     //Usually happens in Cordova
     if (AngularForce.authenticated()) {
         //return $location.path('/contacts/');
-        return $location.path('/main');
+        return $location.path('/');
     }
 
     $scope.login = function () {
         //If in visualforce, 'login' = initialize entity framework
         if (AngularForce.inVisualforce) {
            AngularForce.login(function() {
-            $location.path('/contacts/');
+            //$location.path('/contacts/');
+            $location.path('/');
            });
         } else {
             AngularForce.login();
@@ -185,18 +187,37 @@ controller('ContactDetailCtrl', function ($scope, AngularForce, $location, $rout
     };
 
     $scope.save = function () {
+        $('#errorMessageDiv').empty();
+        $('.removeError').remove();
+        $('.has-error').removeClass('has-error');
         if ($scope.contact.Id) {
             $scope.contact.update(function () {
                 $scope.$apply(function () {
                     $location.path('/view/contact/' + $scope.contact.Id);
                 });
 
+            }, function(error){
+                errorObject = $.parseJSON(error.responseText);
+                $.each(errorObject, function(index, error){
+                    $.each(error.fields, function(index, field){
+                        $('#'+field+'Group').addClass('has-error');
+                        $('#'+field).parent().after('<div class="text-danger removeError">'+error.message+'</div>');
+                    });
+                });
             });
         } else {
             Contact.save($scope.contact, function (contact) {
                 var c = contact;
                 $scope.$apply(function () {
                     $location.path('/view/contact' + c.Id || c.id);
+                });
+            }, function(error){
+                errorObject = $.parseJSON(error.responseText);
+                $.each(errorObject, function(index, error){
+                    $.each(error.fields, function(index, field){
+                        $('#'+field+'Group').addClass('has-error');
+                        $('#'+field).parent().after('<div class="text-danger removeError">'+error.message+'</div>');
+                    });
                 });
             });
         }
